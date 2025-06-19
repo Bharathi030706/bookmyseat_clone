@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from .forms import UserRegisterForm, UserUpdateForm
 from movies.models import Movie, Booking
+from django.utils import timezone
 
 # Homepage view
 def home(request):
@@ -38,9 +39,15 @@ def login_view(request):
     return render(request, 'users/login.html', {'form': form})
 
 # User profile with booking info and update option
+
 @login_required
 def profile(request):
-    bookings = Booking.objects.filter(user=request.user)
+    bookings = Booking.objects.filter(user=request.user).select_related('movie', 'theater', 'seat')
+    now = timezone.now()
+
+    upcoming = bookings.filter(theater__time__gte=now).order_by('theater__time')
+    past = bookings.filter(theater__time__lt=now).order_by('-theater__time')
+
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         if u_form.is_valid():
@@ -49,7 +56,12 @@ def profile(request):
     else:
         u_form = UserUpdateForm(instance=request.user)
 
-    return render(request, 'users/profile.html', {'u_form': u_form, 'bookings': bookings})
+    return render(request, 'users/profile.html', {
+        'u_form': u_form,
+        'upcoming': upcoming,
+        'past': past
+    })
+
 
 # Password reset view
 @login_required

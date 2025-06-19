@@ -3,6 +3,8 @@ from .models import Movie,Theater,Seat,Booking
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 
+
+
 def movie_list(request):
     search_query=request.GET.get('search')
     if search_query:
@@ -48,3 +50,4 @@ def book_seats(request,theater_id):
             return render(request,'movies/seat_selection.html',{'theater':theaters,"seats":seats,'error':"No seat selected"})
         return redirect('profile')
     return render(request,'movies/seat_selection.html',{'theaters':theaters,"seats":seats})
+
