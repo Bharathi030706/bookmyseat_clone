@@ -62,6 +62,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ROOT_URLCONF = 'bookmyseat.urls'
 LOGIN_URL='/login/'
+LOGIN_REDIRECT_URL = '/profile/'
+
 
 TEMPLATES = [
     {
