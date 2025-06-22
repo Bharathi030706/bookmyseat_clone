@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-3-+%y!&_m@357@%a513_o9nup7vj#f^1fcc4kw=c+pl6q=s2@*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'fluffy-lollipop-0673bf.netlify.app'
+]
 
 
 # Application definition
@@ -41,8 +46,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'movies',
+    'channels',
 ]
-
+ASGI_APPLICATION = 'bookmyshow.asgi.application'
+CHANNEL_LAYERS = {
+  'default': {
+    'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    'CONFIG': { 'hosts': [('127.0.0.1', 6379)] },
+  },
+}
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -63,6 +75,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 ROOT_URLCONF = 'bookmyseat.urls'
 LOGIN_URL='/login/'
 LOGIN_REDIRECT_URL = '/profile/'
+
 
 
 TEMPLATES = [
@@ -92,6 +105,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+    
+
 
 DATABASES['default'] = dj_database_url.parse('postgresql://book_my_show_user:fXYCwETzK2gpu9MrOs88OqRzXpfJOOHL@dpg-d17t6jadbo4c73dh3smg-a.oregon-postgres.render.com/book_my_show')
 # Password validation
